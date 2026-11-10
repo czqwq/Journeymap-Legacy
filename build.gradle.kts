@@ -1,4 +1,3 @@
-import com.modrinth.minotaur.ModrinthExtension
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -24,7 +23,6 @@ val mod_id = config.getProperty("mod_id")!!
 val fairPlay = config.getProperty("fairPlay")!!
 val unlimited = config.getProperty("unlimited")!!
 val noRadar = config.getProperty("noRadar")!!
-val curse_release_type = config.getProperty("curse_release_type")!!
 val dateFormat = config.getProperty("dateFormat")!!
 
 val jmVersionComponents = project.version.toString().split(".")
@@ -106,6 +104,12 @@ tasks.reobfJar {
     archiveVersion = "${version}-${unlimited}".lowercase()
 }
 
+tasks.named<Jar>("shadowJar") {
+    filesMatching("mcmod.info") {
+        expand("jm_edition" to unlimited)
+    }
+}
+
 tasks.sourcesJar {
     archiveVersion = "${version}-${unlimited}".lowercase()
 }
@@ -135,39 +139,5 @@ tasks.assemble {
 publishing.publications.withType<MavenPublication> {
     this.artifact(fairPlayJar) {
         classifier = "fairPlay"
-    }
-}
-
-
-pluginManager.withPlugin("com.modrinth.minotaur") {
-    val modrinth = project.extensions.getByType<ModrinthExtension>()
-    modrinth.versionName = "${mod_id}-${minecraft_version}-${project.version}"
-    modrinth.additionalFiles.add(fairPlayJar)
-    if (project.file("/build/doc/changelog.html").exists())
-        modrinth.changelog = project.file("build/doc/changelog.html").readText(Charsets.UTF_8)
-    processDocs {
-        doLast {
-            // If the task executes, update the changelog in Minotaur as it doesn't support passing in a File
-            modrinth.changelog = project.file("build/doc/changelog.html").readText(Charsets.UTF_8)
-        }
-    }
-    tasks.named("modrinth") {
-        dependsOn(processDocs)
-    }
-}
-
-tasks.publishCurseforge {
-    dependsOn(processDocs)
-
-    val mainArtifact = this.uploadArtifacts[0]
-    mainArtifact.displayName = "${mod_id}-${minecraft_version}-${project.version}"
-    mainArtifact.releaseType = curse_release_type
-    mainArtifact.changelogType = "html"
-    mainArtifact.addEnvironment("Server", "Client")
-    mainArtifact.changelog = project.file("build/doc/changelog.html")
-    mainArtifact.withAdditionalFile(fairPlayJar.get().archiveFile.get().asFile)
-    mainArtifact.additionalArtifacts.forEach { additionalArtifact ->
-        additionalArtifact.changelogType = mainArtifact.changelogType
-        additionalArtifact.changelog = mainArtifact.changelog
     }
 }
