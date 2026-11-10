@@ -105,6 +105,8 @@ tasks.reobfJar {
 }
 
 tasks.named<Jar>("shadowJar") {
+    // The unlimited edition must not contain the NoRadar policy class (same as the original build script)
+    exclude("journeymap/client/feature/impl/NoRadar.class")
     filesMatching("mcmod.info") {
         expand("jm_edition" to unlimited)
     }
