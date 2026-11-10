@@ -2,6 +2,8 @@
 
 Source code and build resources for [JourneyMap][2] ([http://journeymap.info][2])
 
+## This version is modified JM5. Version may not the newest of [upstream](https://github.com/TeamJM/journeymap-legacy). But it would be the greatest one.
+
 ## Requirements
 
 * Java 17 JDK
@@ -26,8 +28,8 @@ When submitting a pull request, please follow these guidelines:
 Check out a branch of the JourneyMap GIT repo to a directory called journeymap.  For example:
 
 ```sh
-    git clone git@github.com:TeamJM/journeymap-legacy.git
-    cd journeymap-legacy
+    git clone git@github.com:czqwq/Journeymap-Legacy.git
+    cd Journeymap-Legacy
     git fetch && git checkout (branchname)
 ```
 
