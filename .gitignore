@@ -8,6 +8,7 @@ docs/
 eclipse/.metadata
 eclipse/Minecraft/.idea/workspace.xml
 jars/
+/tmp/
 logs/
 run/
 runtime/
