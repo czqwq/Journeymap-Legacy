@@ -124,7 +124,10 @@ val fairPlayJar by tasks.registering(Jar::class) {
         exclude("**/module-info.class")
     }
     manifest.from(tasks.jar.get().manifest)
+    // Exclude both policy classes so FeatureManager falls back to its built-in FairPlay policy
+    // (all features disabled in multiplayer). Leaving NoRadar.class in would select NoRadar instead.
     exclude("journeymap/client/feature/impl/Unlimited.class")
+    exclude("journeymap/client/feature/impl/NoRadar.class")
     from(tasks.processResources) {
         include("mcmod.info")
         expand("jm_edition" to fairPlay)
